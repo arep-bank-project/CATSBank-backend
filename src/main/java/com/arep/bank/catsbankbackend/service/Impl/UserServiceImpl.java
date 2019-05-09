@@ -23,7 +23,12 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public User getUserById(int id) throws BankAccountException {
-        return users.get(id);
+        if(users.containsKey(id)){
+            return users.get(id);
+        }else{
+            throw new BankAccountException(BankAccountException.NOT_FOUND);
+        }
+
     }
 
     @Override

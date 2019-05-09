@@ -20,6 +20,11 @@ public class User {
     public User() {
     }
 
+    public User(int id, String password) {
+        this.id = id;
+        this.password = password;
+    }
+
     public User(String name, int id, CATSAccount account, String type, Reference reference, String email, String address, int phone) {
         this.name = name;
         this.id = id;

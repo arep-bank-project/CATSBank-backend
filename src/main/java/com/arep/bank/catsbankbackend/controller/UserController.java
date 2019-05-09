@@ -29,20 +29,16 @@ public class UserController {
 
         String jwtToken;
 
-        if (login.getEmail() == null || login.getPassword() == null) {
-            throw new ServletException("Please fill in email and password");
-        }
-
-        String email = login.getEmail();
+        int id = login.getId();
         String password = login.getPassword();
 
         User user;
         try {
-            user = userService.getUserByEmail(email);
+            user = userService.getUserById(id);
 
         } catch (BankAccountException e) {
 
-            throw new ServletException("User email not found.");
+            throw new ServletException("User id not found.");
         }
 
         String pwd = user.getPassword();
@@ -51,7 +47,7 @@ public class UserController {
             throw new ServletException("Invalid login. Please check your name and password.");
         }
         //
-        jwtToken = Jwts.builder().setSubject(email).claim("roles", "user").setIssuedAt(new Date()).signWith(
+        jwtToken = Jwts.builder().setSubject(Integer.toString(id)).claim("roles", "user").setIssuedAt(new Date()).signWith(
                 SignatureAlgorithm.HS256, "secretkey").compact();
 
         return new Token(jwtToken);
