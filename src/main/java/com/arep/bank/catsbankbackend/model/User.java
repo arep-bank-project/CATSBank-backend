@@ -3,7 +3,7 @@ package com.arep.bank.catsbankbackend.model;
 public class User {
     private String name;
     private int id;
-    private CATSAccount account;
+    private Account account;
 
     private Reference reference;
 
@@ -25,7 +25,7 @@ public class User {
         this.password = password;
     }
 
-    public User(String name, int id, CATSAccount account, String type, Reference reference, String email, String address, int phone) {
+    public User(String name, int id, Account account, String type, Reference reference, String email, String address, int phone) {
         this.name = name;
         this.id = id;
         this.account = account;
@@ -60,11 +60,11 @@ public class User {
         this.id = id;
     }
 
-    public CATSAccount getAccount() {
+    public Account getAccount() {
         return account;
     }
 
-    public void setAccount(CATSAccount account) {
+    public void setAccount(Account account) {
         this.account = account;
     }
 

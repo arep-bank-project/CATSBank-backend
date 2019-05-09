@@ -1,6 +1,6 @@
 package com.arep.bank.catsbankbackend.model;
 
-public class CATSAccount {
+public class CATSAccount implements Account{
 
     private int accountId;
     private double amount;
