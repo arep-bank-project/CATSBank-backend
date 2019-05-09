@@ -4,6 +4,7 @@ import com.arep.bank.catsbankbackend.model.User;
 import com.arep.bank.catsbankbackend.service.BankAccountException;
 import com.arep.bank.catsbankbackend.service.UserService;
 
+import com.arep.bank.catsbankbackend.service.UserVerificationService;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,6 +23,9 @@ import java.util.Date;
 public class UserController {
     @Autowired
     private UserService userService;
+
+    @Autowired
+    private UserVerificationService verificationService;
 
     @RequestMapping(value = "/login", method = RequestMethod.POST)
     public Token login(@RequestBody User login)
@@ -57,12 +61,23 @@ public class UserController {
     public ResponseEntity<?> register(@RequestBody User register)
             throws ServletException {
         if (register.getEmail() != null && register.getName() != null && register.getPassword() != null && register.getName() != null) {
-            try {
-                userService.createUser(register);
-                return new ResponseEntity<>(HttpStatus.CREATED);
-            } catch (Exception e) {
-                throw new ServletException("Invalid data while creation user");
+
+            if (verificationService.verifyUser(register.getId(), register.getName(), register.getType())) {
+                if (!verificationService.isUserBlackListed(register.getId())) {
+                    try {
+                        userService.createUser(register);
+                    }catch(Exception e){
+                        throw new ServletException("No fue posible crear el ususario, intente nuevamente");
+                    }
+                } else {
+                    throw new ServletException("Usuario encontrado en listas de riesgo, no es posible crear cuenta");
+                }
+            } else {
+                throw new ServletException("Datos ingresados no son veridicos, no es posible crear cuenta");
             }
+
+            return new ResponseEntity<>(HttpStatus.CREATED);
+
         }else{
             return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
         }

@@ -1,13 +1,18 @@
 package com.arep.bank.catsbankbackend.model;
 
+import java.util.HashSet;
+import java.util.Set;
+
 public class CATSAccount implements Account{
 
     private int accountId;
     private double amount;
 
-    public CATSAccount(int accountId, double amount) {
-        this.accountId = accountId;
-        this.amount = amount;
+    Set<Integer> accounts = new HashSet<>();
+
+    public CATSAccount() {
+        this.accountId = (int)((Math.random() * 9000000)+1000000);
+        this.amount = 0;
     }
 
     public int getAccountId() {

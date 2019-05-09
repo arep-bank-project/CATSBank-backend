@@ -1,5 +1,7 @@
 package com.arep.bank.catsbankbackend.service.Impl;
 
+import com.arep.bank.catsbankbackend.model.Account;
+import com.arep.bank.catsbankbackend.model.CATSAccount;
 import com.arep.bank.catsbankbackend.model.User;
 import com.arep.bank.catsbankbackend.service.BankAccountException;
 import com.arep.bank.catsbankbackend.service.UserService;
@@ -13,6 +15,7 @@ import java.util.Map;
 
 @Service
 public class UserServiceImpl implements UserService {
+
 
     Map<Integer, User> users =  new HashMap<>();
     @Override
@@ -38,7 +41,16 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public User createUser(User user) throws BankAccountException {
-        users.put(user.getId(), user);
+        Account account;
+        if (user.getType().equals("CTS")){
+            account = new CATSAccount();
+            user.setAccount(account);
+            users.put(user.getId(), user);
+
+        }else{
+            users.put(user.getId(), user);
+        }
+
         return user;
     }
 
