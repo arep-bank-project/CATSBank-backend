@@ -1,4 +1,4 @@
-package com.arep.bank.catsbankbackend.services;
+package com.arep.bank.catsbankbackend.service;
 
 import com.arep.bank.catsbankbackend.model.CATSAccount;
 
