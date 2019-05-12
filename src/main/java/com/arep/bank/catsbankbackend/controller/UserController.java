@@ -30,7 +30,12 @@ public class UserController {
     @RequestMapping(value = "/login", method = RequestMethod.POST)
     public Token login(@RequestBody User login)
             throws ServletException {
-
+        System.out.println(login);
+        try {
+            System.out.println(userService.getUsers());
+        } catch (BankAccountException e) {
+            e.printStackTrace();
+        }
         String jwtToken;
 
         int id = login.getId();
@@ -61,25 +66,23 @@ public class UserController {
     public ResponseEntity<?> register(@RequestBody User register)
             throws ServletException {
         if (register.getEmail() != null && register.getName() != null && register.getPassword() != null && register.getName() != null) {
-
             if (verificationService.verifyUser(register.getId(), register.getName(), register.getType())) {
                 if (!verificationService.isUserBlackListed(register.getId())) {
                     try {
                         userService.createUser(register);
+                        return new ResponseEntity<>(HttpStatus.CREATED);
                     }catch(Exception e){
-                        throw new ServletException("No fue posible crear el ususario, intente nuevamente");
+                        return new ResponseEntity<>(new ServletException("No fue posible crear el ususario, intente nuevamente"), HttpStatus.BAD_REQUEST);
                     }
                 } else {
-                    throw new ServletException("Usuario encontrado en listas de riesgo, no es posible crear cuenta");
+                    return new ResponseEntity<>(new ServletException("Usuario encontrado en listas de riesgo, no es posible crear cuenta"), HttpStatus.BAD_REQUEST);
                 }
             } else {
-                throw new ServletException("Datos ingresados no son veridicos, no es posible crear cuenta");
+                return new ResponseEntity<>(new ServletException("Datos ingresados no son veridicos, no es posible crear cuenta"), HttpStatus.BAD_REQUEST);
             }
 
-            return new ResponseEntity<>(HttpStatus.CREATED);
-
         }else{
-            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+            return new ResponseEntity<>(new ServletException("Datos ingresados no estan completos"),HttpStatus.BAD_REQUEST);
         }
 
     }

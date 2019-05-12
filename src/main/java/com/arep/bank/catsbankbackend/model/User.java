@@ -107,4 +107,19 @@ public class User {
     public void setPassword(String password) {
         this.password = password;
     }
+
+    @Override
+    public String toString() {
+        return "User{" +
+                "name='" + name + '\'' +
+                ", id=" + id +
+                ", account=" + account +
+                ", reference=" + reference +
+                ", type='" + type + '\'' +
+                ", email='" + email + '\'' +
+                ", address='" + address + '\'' +
+                ", phone=" + phone +
+                ", password='" + password + '\'' +
+                '}';
+    }
 }
