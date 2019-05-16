@@ -18,6 +18,7 @@ public class UserServiceImpl implements UserService {
 
 
     Map<Integer, User> users =  new HashMap<>();
+    Map<Integer, Account> accounts= new HashMap<>();
     @Override
     public List<User> getUsers() throws BankAccountException {
 
@@ -34,6 +35,23 @@ public class UserServiceImpl implements UserService {
 
     }
 
+
+    public Account getAccountById(int account) throws BankAccountException{
+        if(accounts.containsKey(account)){
+            return accounts.get(account);
+        }else{
+            throw new BankAccountException(BankAccountException.NOT_FOUND);
+        }
+    };
+
+    public void updateAccount(Account account) throws BankAccountException {
+        if(accounts.containsKey(account.getAccountId())){
+            accounts.put(account.getAccountId(),account);
+        }else{
+            throw new BankAccountException(BankAccountException.NOT_FOUND);
+        }
+    }
+
     @Override
     public User getUserByEmail(String email) throws BankAccountException {
         return null;
@@ -44,8 +62,12 @@ public class UserServiceImpl implements UserService {
         Account account;
         if (user.getType().equals("CTS")){
             account = new CATSAccount();
+            accounts.put(account.getAccountId(), account);
             user.setAccount(account);
             users.put(user.getId(), user);
+            /*for (Map.Entry<Integer, Account> entry : accounts.entrySet()) {
+                System.out.println(entry.getKey() + " = " + entry.getValue());
+            }*/
 
         }else{
             users.put(user.getId(), user);
@@ -55,12 +77,45 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public User updateUser(User user) throws BankAccountException {
-        return null;
+    public void updateUser(User user) throws BankAccountException {
+        if(users.containsKey(user.getId())){
+            users.put(user.getId(), user);
+        }
+        else {
+
+            throw new BankAccountException(BankAccountException.NOT_FOUND);
+        }
     }
 
     @Override
     public boolean removeUser(int id) throws BankAccountException {
+        return false;
+    }
+
+    @Override
+    public boolean transfer(int fromAccount, int toAccount, double amount) {
+        /*for (Map.Entry<Integer, Account> entry : accounts.entrySet()) {
+            System.out.println(entry.getKey() + " = " + entry.getValue());
+        }*/
+        try{
+
+            Account from = getAccountById(fromAccount);
+            Account to = getAccountById(toAccount);
+            /*User from = getUserById(fromAccount);
+            User to = getUserById(toAccount);*/
+
+            if (from.getAmount() < amount){
+                throw new BankAccountException(BankAccountException.TRANSFER_NOT_SUCCESSFUL);
+            }else{
+                from.setAmount(from.getAmount() - amount);
+
+                to.setAmount(to.getAmount() + amount);
+            }
+
+        } catch (BankAccountException e) {
+            e.printStackTrace();
+        }
+
         return false;
     }
 }

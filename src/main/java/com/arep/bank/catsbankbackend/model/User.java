@@ -1,5 +1,7 @@
 package com.arep.bank.catsbankbackend.model;
 
+import com.arep.bank.catsbankbackend.controller.UserController;
+
 public class User {
     private String name;
     private int id;
@@ -16,6 +18,8 @@ public class User {
     int phone;
 
     String password;
+
+    UserController.Token token;
 
     public User() {
     }
@@ -106,5 +110,13 @@ public class User {
 
     public void setPassword(String password) {
         this.password = password;
+    }
+
+    public UserController.Token getToken() {
+        return token;
+    }
+
+    public void setToken(UserController.Token token) {
+        this.token = token;
     }
 }

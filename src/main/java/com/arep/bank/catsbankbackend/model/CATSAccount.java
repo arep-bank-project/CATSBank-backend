@@ -12,7 +12,7 @@ public class CATSAccount implements Account{
 
     public CATSAccount() {
         this.accountId = (int)((Math.random() * 9000000)+1000000);
-        this.amount = 0;
+        this.amount = 100;
     }
 
     public int getAccountId() {

@@ -14,7 +14,9 @@ public interface UserService {
 
     User createUser( User user) throws BankAccountException;
 
-    User updateUser(User user) throws BankAccountException;
+    void updateUser(User user) throws BankAccountException;
 
     boolean removeUser(int id) throws BankAccountException;
+
+    boolean transfer(int fromAccount, int toAccount, double amount);
 }

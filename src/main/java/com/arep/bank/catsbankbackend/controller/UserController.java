@@ -13,6 +13,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.ServletException;
+import javax.xml.ws.Response;
 import java.util.Date;
 
 
@@ -28,7 +29,7 @@ public class UserController {
     private UserVerificationService verificationService;
 
     @RequestMapping(value = "/login", method = RequestMethod.POST)
-    public Token login(@RequestBody User login)
+    public User login(@RequestBody User login)
             throws ServletException {
 
         String jwtToken;
@@ -39,14 +40,12 @@ public class UserController {
         User user;
         try {
             user = userService.getUserById(id);
-
         } catch (BankAccountException e) {
 
             throw new ServletException("User id not found.");
         }
 
         String pwd = user.getPassword();
-
         if (!password.equals(pwd)) {
             throw new ServletException("Invalid login. Please check your name and password.");
         }
@@ -54,8 +53,23 @@ public class UserController {
         jwtToken = Jwts.builder().setSubject(Integer.toString(id)).claim("roles", "user").setIssuedAt(new Date()).signWith(
                 SignatureAlgorithm.HS256, "secretkey").compact();
 
-        return new Token(jwtToken);
+        user.setToken(new Token(jwtToken));
+        return user;
     }
+
+    @RequestMapping(value = "/transfer", method = RequestMethod.PUT)
+    public ResponseEntity<?> transfer(@RequestParam int fromAccount, @RequestParam int toAccount, @RequestParam double amount) throws ServletException{
+        //System.out.println(fromAccount);
+        try {
+            userService.transfer(fromAccount, toAccount, amount);
+            return new ResponseEntity<>(HttpStatus.OK);
+        }catch(Exception e){
+            e.printStackTrace();
+            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+
+
 
     @RequestMapping(value = "/register", method = RequestMethod.POST)
     public ResponseEntity<?> register(@RequestBody User register)
