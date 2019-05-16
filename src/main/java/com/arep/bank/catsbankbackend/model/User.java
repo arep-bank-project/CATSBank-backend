@@ -112,11 +112,27 @@ public class User {
         this.password = password;
     }
 
+
     public UserController.Token getToken() {
         return token;
     }
 
     public void setToken(UserController.Token token) {
         this.token = token;
+    }
+
+    @Override
+    public String toString() {
+        return "User{" +
+                "name='" + name + '\'' +
+                ", id=" + id +
+                ", account=" + account +
+                ", reference=" + reference +
+                ", type='" + type + '\'' +
+                ", email='" + email + '\'' +
+                ", address='" + address + '\'' +
+                ", phone=" + phone +
+                ", password='" + password + '\'' +
+                '}';
     }
 }
